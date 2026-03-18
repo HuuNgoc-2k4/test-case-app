@@ -1,0 +1,299 @@
+﻿<Window x:Class="QuanLyChungCu.Login"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:automation="clr-namespace:System.Windows.Automation;assembly=PresentationCore"
+        xmlns:local="clr-namespace:QuanLyChungCu"
+        mc:Ignorable="d"
+        Title="Đăng Nhập" Height="550" Width="900"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Background="Transparent"
+        FontFamily="Arial"
+        AllowsTransparency="True">
+    <Border CornerRadius="25">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#e2e2e2" Offset="0.3"/>
+                <GradientStop Color="#c5d6fd" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.Background>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" CornerRadius="25 100 100 25">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#6996f0" Offset="0"/>
+                        <GradientStop Color="#7981ef" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <StackPanel Width="300"
+                            Grid.Row="1"
+                            Orientation="Vertical"
+                            VerticalAlignment="Center">
+                    <TextBox Height="270" BorderThickness="0">
+                        <TextBox.Background>
+                            <ImageBrush ImageSource="/Image/Untitled-2.png"
+                                Stretch="Fill"
+                                AlignmentX="Left"/>
+                        </TextBox.Background>
+                    </TextBox>
+
+                    <TextBlock Text="QUẢN LÝ CHUNG CƯ"
+                               Foreground="White"
+                               FontSize="25"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"/>
+                    <Button x:Name="btnChangePassword"                          
+                            automation:AutomationProperties.AutomationId="Login.ChangePassword"
+                            BorderThickness="0"
+                            Content="Đổi Mật Khẩu"                           
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Cursor="Hand"               
+                            Margin="0,20,0,0"
+                            Click="btnChangerPassword_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="White"/>
+                                        <Setter Property="Foreground" Value="#6996f0"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Width="200" Height="50"
+                                        CornerRadius="10"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="White" 
+                                        BorderThickness="2">
+                                    <ContentPresenter VerticalAlignment="Center"
+                                                      HorizontalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="30"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="btnMinimize"                           
+                            automation:AutomationProperties.AutomationId="Login.Minimize"
+                            BorderThickness="0"
+                            Content="-"
+                            Foreground="White"
+                            FontSize="17"
+                            Cursor="Hand"
+                            Grid.Column="1"
+                            Click="btnMinimize_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#28AEED"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#278BEF"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Width="20" Height="20"
+                                        CornerRadius="10"
+                                        Background="{TemplateBinding Background}">
+                                    <ContentPresenter VerticalAlignment="Center"
+                                                      HorizontalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button x:Name="btnClose"                          
+                            automation:AutomationProperties.AutomationId="Login.Close"
+                            BorderThickness="0"
+                            Content="X"
+                            Foreground="White"
+                            FontSize="13"
+                            Cursor="Hand"
+                            Grid.Column="2"
+                            Click="btnClose_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#FFDA5A34"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#C62DAE"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Width="20" Height="20"
+                                        CornerRadius="10"
+                                        Background="{TemplateBinding Background}">
+                                    <ContentPresenter VerticalAlignment="Center"
+                                                      HorizontalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+
+                <StackPanel Grid.Row="1"
+                            Width="350"
+                            Orientation="Vertical"
+                            Margin="0 37 0 0">
+                    <TextBlock Text="Đăng Nhập"
+                               Foreground="#2e3134"
+                               FontSize="40"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"/>
+
+                    <Grid Margin="0 30 0 0">
+
+                        <TextBlock Text="Tài Khoản:"
+                                   Foreground="#8f8f8f"
+                                   Margin="10 0 0 0"
+                                   FontSize="15"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Left"/>
+                        <TextBox x:Name="txtUser"
+                                 automation:AutomationProperties.AutomationId="Login.Username"
+                                 Margin="0,25,0,0"
+                                 Height="50"
+                                 FontSize="15"
+                                 FontWeight="Medium"
+                                 Foreground="#8f8f8f"
+                                 CaretBrush="LightGray"
+                                 VerticalContentAlignment="Center"
+                                 BorderBrush="Transparent"
+                                 BorderThickness="0"
+                                 Padding="20,0,10,0"
+                                 IsReadOnly="False">
+
+                        </TextBox>
+                        <Image Source="/Image/user-icon.png"
+                               Width="20"
+                               Height="20"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Left"
+                               Margin="320,40,0,0" RenderTransformOrigin="15.274,1.26"/>
+                    </Grid>
+
+                    <Grid Margin="0 15 0 0">
+                        <TextBlock Text="Mật Khẩu:"
+                                   Foreground="#8f8f8f"
+                                   Margin="10 0 0 0"
+                                   FontSize="15"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Left"/>
+                        <PasswordBox x:Name="txtPassword"
+                                 automation:AutomationProperties.AutomationId="Login.Password"
+                                 Margin="0,25,0,0"
+                                 Height="50"
+                                 FontSize="15"
+                                 FontWeight="Medium"
+                                 Foreground="#8f8f8f"
+                                 CaretBrush="LightGray"
+                                 VerticalContentAlignment="Center"
+                                 BorderBrush="Transparent"
+                                 BorderThickness="0"
+                                 Padding="20,0,10,0">
+                            
+                        </PasswordBox>
+                        <TextBox x:Name="txtPasswordVisible"
+                                 automation:AutomationProperties.AutomationId="Login.PasswordVisible"
+                                 Margin="0,25,0,0"
+                                 Height="50"
+                                 FontSize="15"
+                                 FontWeight="Medium"
+                                 Foreground="#8f8f8f"
+                                 VerticalContentAlignment="Center"
+                                 BorderBrush="Transparent"
+                                 BorderThickness="0"
+                                 Padding="20,0,10,0"
+                                 Visibility="Collapsed"/>
+                        <Image Source="/Image/key-icon.png"
+                               Width="20"
+                               Height="20"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Left"
+                               Margin="320,40,0,0" RenderTransformOrigin="15.274,1.26"/>
+                    </Grid>
+
+                    <CheckBox Content="Hiển thị mật khẩu"
+                              automation:AutomationProperties.AutomationId="Login.ShowPassword"
+                              Checked="ShowPassword_Checked"
+                              Unchecked="ShowPassword_Unchecked"
+                              Height="40"
+                              FontSize="15"
+                              FontWeight="Bold"
+                              Foreground="#8f8f8f"
+                              VerticalContentAlignment="Center"
+                              BorderBrush="Transparent"
+                              BorderThickness="0"
+                              Padding="5,0,10,0"
+                              Margin="0,5,0,0"/>
+
+                    <Button x:Name="btnLogin"                          
+                            automation:AutomationProperties.AutomationId="Login.Submit"
+                            BorderThickness="0"
+                            Content="Đăng Nhập"                           
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Cursor="Hand"               
+                            Margin="0,20,0,0"
+                            Click="btnLogin_Click"
+                            IsDefault="True">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#7389ef"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="White"/>
+                                        <Setter Property="Foreground" Value="#6996f0"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Width="180" Height="50"
+                                        CornerRadius="10"
+                                        Background="{TemplateBinding Background}">
+                                    <ContentPresenter VerticalAlignment="Center"
+                                  HorizontalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

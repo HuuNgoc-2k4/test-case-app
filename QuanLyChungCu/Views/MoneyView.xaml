@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="QuanLyChungCu.Views.MoneyView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuanLyChungCu.Views"
+             xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Background="White">
+        <DataGrid Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" 
+            ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}"
+            RowStyle="{DynamicResource DataGridRowStyle1}" 
+            x:Name="MemberDataGrid"
+            Grid.Row="3" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="STT" Binding="{Binding STT}" Width="53"/>
+                <DataGridTextColumn Header="Tên chủ hộ" Binding="{Binding TenChuHo}" Width="140"/>
+                <DataGridTextColumn Header="Điện" Binding="{Binding PowerReading}" Width="60"/>
+                <DataGridTextColumn Header="Nước" Binding="{Binding WaterReading}" Width="65"/>
+                <DataGridTextColumn Header="$Phòng" Binding="{Binding RoomRent, StringFormat=N0}" Width="95"/>
+                <DataGridTextColumn Header="$Điện" Binding="{Binding TienDien, StringFormat=N0}" Width="*"/>
+                <DataGridTextColumn Header="$Nước" Binding="{Binding TienNuoc, StringFormat=N0}" Width="*"/>
+                <DataGridTextColumn Header="$DV" Binding="{Binding TienDichVu, StringFormat=N0}" Width="*"/>
+                <DataGridTextColumn Header="Tổng" Binding="{Binding TongTien, StringFormat=N0}" Width="100"/>
+
+                <DataGridTemplateColumn Width="70">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Sửa" 
+                                    Click="EditMoney_Click" 
+                                    Tag="{Binding ID}"
+                                    Style="{StaticResource grideditButton}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

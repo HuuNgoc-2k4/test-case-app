@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="QuanLyChungCu.Views.dataCivili"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuanLyChungCu.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+            <ItemsControl x:Name="itemsControl">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderThickness="1" BorderBrush="#DDDDDD" CornerRadius="10" Padding="10">
+                            <StackPanel>
+                                <TextBlock Text="{Binding TenChuHo}" FontSize="22" FontWeight="Bold" Foreground="#333"/>
+                                <TextBlock Text="Thông tin chủ hộ:" FontWeight="SemiBold" Margin="0,5,0,0"/>
+
+                                <StackPanel Margin="10,0,0,0">
+                                    <TextBlock Text="{Binding SoDienThoai}" FontSize="16" />
+                                    <TextBlock Text="{Binding DiaChi}" FontSize="16" />
+                                    <TextBlock Text="{Binding MaHo}" FontSize="16" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+        <!--Couter Title-->
+        <TextBlock Text="Danh Sách Thành Viên Trong Hộ" Grid.Row="2" FontSize="18" FontWeight="SemiBold"
+       Foreground="#121518" HorizontalAlignment="Left"
+       VerticalAlignment="Center" Margin="10 0 0 0"/>
+
+        <DataGrid Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" 
+      ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}"
+      RowStyle="{DynamicResource DataGridRowStyle1}" Grid.Row="3"
+      x:Name="dataGridResidents">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Tên thành viên" IsReadOnly="True" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Năm sinh" IsReadOnly="True" Width="*" Binding="{Binding BirthDate}"/>
+                <DataGridTextColumn Header="SĐT" IsReadOnly="True" Width="*" Binding="{Binding Phone}"/>
+                <DataGridTextColumn Header="Quê quán" IsReadOnly="True" Width="*" Binding="{Binding QueQuan}"/>
+
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

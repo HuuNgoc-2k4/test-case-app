@@ -1,0 +1,105 @@
+﻿<UserControl x:Class="QuanLyChungCu.Views.NotifiView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuanLyChungCu.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <!-- Bo tròn toàn bộ giao diện -->
+    <Border Background="White" CornerRadius="25" Padding="20" BorderBrush="Gray" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Tiêu đề -->
+                <RowDefinition Height="*"/>
+                <!-- Danh sách thông báo -->
+                <RowDefinition Height="Auto"/>
+                <!-- Nhập thông báo -->
+            </Grid.RowDefinitions>
+
+            <!-- Tiêu đề -->
+            <TextBlock Text="📋 Danh sách thông báo" FontSize="24" FontWeight="Bold"
+                VerticalAlignment="Center" Foreground="#007ACC" Margin="0,0,0,10"/>
+
+            <!-- Danh sách thông báo -->
+            <Border Background="White" CornerRadius="20" Padding="10" BorderBrush="Gray" BorderThickness="1" Grid.Row="1">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ListBox x:Name="NotificationLists" Background="Transparent" ItemsSource="{Binding Notifications}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="10" Margin="5" Background="#F5F5F5" CornerRadius="10">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Title}" FontSize="16" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding Date}" FontSize="14" Foreground="Gray"/>
+                                        <TextBlock Text="{Binding Content}" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+            </Border>
+
+            <!-- Khu vực nhập thông báo -->
+            <Border Background="#ffffff" CornerRadius="20" Padding="10" BorderBrush="Gray" BorderThickness="1" Grid.Row="2" Margin="0,10,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- TextBox nhập tiêu đề -->
+                    <Border CornerRadius="10" BorderThickness="1" BorderBrush="Gray" Background="#ffffff" Margin="5">
+                        <TextBox x:Name="TitleTextBox" Text="Nhập tiêu đề..."
+                          Height="35" FontSize="14" Padding="5" Foreground="Gray" Background="Transparent"
+                          VerticalContentAlignment="Center"
+                                 BorderBrush="Transparent"
+                          GotFocus="TitleTextBox_GotFocus" LostFocus="TitleTextBox_LostFocus"/>
+                    </Border>
+                    <!-- TextBox nhập nội dung -->
+                    <Border CornerRadius="10" BorderThickness="1" BorderBrush="Gray" Background="#ffffff" Margin="5" Grid.Column="1">
+                        <TextBox x:Name="ContentTextBox" Text="Nhập nội dung thông báo..."
+                          Height="35" FontSize="14" Padding="5" Foreground="Gray" Background="Transparent"
+                          VerticalContentAlignment="Center" BorderBrush="Transparent"
+                          GotFocus="ContentTextBox_GotFocus" LostFocus="ContentTextBox_LostFocus"/>
+                    </Border>
+
+                    <!-- Nút gửi thông báo -->
+                    <Border CornerRadius="10" Background="#007ACC" Margin="5" Grid.Column="2">
+
+
+                        <Button Content="➡ Gửi" Panel.ZIndex="999"
+                         Width="100" Height="35" FontSize="14"
+                         Foreground="White" Background="Transparent" Cursor="Hand"
+                         BorderThickness="0" IsDefault="True"
+                         Click="SendNotification_Click">
+
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                 CornerRadius="10"
+                                 BorderThickness="{TemplateBinding BorderThickness}"
+                                 BorderBrush="{TemplateBinding BorderBrush}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#005A9E"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter Property="Background" Value="#004080"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+
+                    </Border>
+                </Grid>
+            </Border>
+
+        </Grid>
+    </Border>
+</UserControl>

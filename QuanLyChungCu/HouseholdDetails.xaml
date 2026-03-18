@@ -1,0 +1,151 @@
+﻿<Window x:Class="QuanLyChungCu.HouseholdDetails"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        Title="Chi tiết hộ" Height="600" Width="600" 
+        WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="Transparent">
+    <Border Background="#ffffff" CornerRadius="30" MouseDown="Border_MouseDown"
+            BorderBrush="Black" BorderThickness="2">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Button x:Name="btnMinimize"                           
+                    BorderThickness="0"
+                    Grid.Row="0"
+                    Content="-"
+                    Foreground="White"
+                    FontSize="17"
+                    Cursor="Hand"                    
+                    Click="btnMinimize_Click"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Margin="0 5 40 0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="#28AEED"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#278BEF"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="20" Height="20"
+                                CornerRadius="10"
+                                Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <Button x:Name="btnClose"                          
+                    BorderThickness="0"
+                    Content="X"
+                    Grid.Row="0"
+                    Foreground="White"
+                    FontSize="13"
+                    Cursor="Hand"
+                    Grid.Column="2"
+                    Click="btnClose_Click"
+                    HorizontalAlignment="Right"
+                    Margin="0 5 15 0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="#FFDA5A34"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#C62DAE"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="20" Height="20"
+                                CornerRadius="10"
+                                Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <ItemsControl x:Name="itemsControl" Grid.Row="1">
+                <ItemsControl.Items>
+                    <Border CornerRadius="10" Margin="10 10 5 10" Padding="0">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}" FontSize="22" FontWeight="SemiBold" Foreground="Black"/>
+                            <Separator Height="1" Background="#dae2ea" Margin="0 3 10 10"/>
+                        </StackPanel>
+                    </Border>
+                </ItemsControl.Items>
+            </ItemsControl>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10,10,0,0">
+                <TextBlock Text="Danh sách thành viên:" FontWeight="SemiBold" FontSize="16"/>
+                <Button x:Name="btnAddResident"
+                        Content="Thêm Cư Dân"
+                        Width="120"
+                        Height="30"
+                        Margin="270,0,0,0"
+                        Click="btnAddResident_Click"
+                        Background="#28AEED"
+                        Foreground="White"
+                        Cursor="Hand"
+                        BorderThickness="0"
+                        FontWeight="Bold"/>
+            </StackPanel>
+
+            <Border Grid.Row="3" CornerRadius="10" Margin="5 0 5 0">
+                <DataGrid Style="{DynamicResource DataGridStyle1}"
+                          CellStyle="{DynamicResource DataGridCellStyle1}"
+                          ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}"
+                          RowStyle="{DynamicResource DataGridRowStyle1}"
+                          x:Name="MemberDataGrid"
+                          ItemsSource="{Binding Residents}">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Tên thành viên" IsReadOnly="True" Width="160">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Năm sinh" IsReadOnly="True" Width="*" Binding="{Binding BirthDate}"/>
+                        <DataGridTextColumn Header="SĐT" IsReadOnly="True" Width="*" Binding="{Binding Phone}"/>
+                        <DataGridTextColumn Header="Quê quán" IsReadOnly="True" Width="*" Binding="{Binding QueQuan}"/>
+                        <DataGridTemplateColumn Header="Chức năng" IsReadOnly="True" Width="auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Style="{StaticResource grideditButton}" Click="EditResident_Click"  Tag="{Binding}">
+                                            <Icon:PackIconMaterial Kind="PencilOutline" Style="{StaticResource GridButtunIcon}"/>
+                                        </Button>
+                                        <Button Style="{StaticResource gridRemoveButton}" Margin="5 0 0 0"  Click="DeleteResident_Click"  Tag="{Binding}">
+                                            <Icon:PackIconMaterial Kind="DeleteOutline" Style="{StaticResource GridButtunIcon}"/>
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

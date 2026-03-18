@@ -1,0 +1,177 @@
+﻿# Visual Studio
+.vs/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build output
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.VersionX.json
+dist/
+build/
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+.nuget/
+nuget.config
+
+# Test Results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# Database
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.db
+*.mdf
+*.ldf
+identifier.sqlite
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+.env.*.local
+appsettings.Development.json
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.personalconfig
+
+# Backup files
+*.bak
+*.backup
+*~
+*.orig
+
+# Temporary files
+*.tmp
+*.temp
+*.cache
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.iml
+.vscode/settings.json
+.vscode/extensions.json
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Dependencies cache
+.npm
+node_modules/
+
+# Private/Secret files
+*.key
+*.pem
+secrets.json
+config.secrets.json
+
+# VS Code
+.vscode/
+
+# Visual Studio
+.vs/
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# BinSkims
+binskim-results.sarif
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache/options
+.vs/
+
+# Files built by Visual Studio
+*.sln.docstates
+
+# Xamarin.Android specific
+*.apk
+*.aab
+
+# Rider
+.idea/
+.ideaLocalSettings
+*.sln.iml
+
+# MacOS
+.AppleDouble
+.AppleDB
+*.dylib
+
+# Android Studio
+.gradle
+.gradle/
+
+# Database
+*.sqlite3
+
+# WinAppDriver
+*.wd
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.Python
+
+# Generated files
+GeneratedFiles/
+
+# Certificates
+*.cer
+*.crt
+*.pfx
+
+# Report files
+reports/
+coverage-report/
+
+# Any large files
+*.iso
+*.zip
+*.rar
+*.7z
+
