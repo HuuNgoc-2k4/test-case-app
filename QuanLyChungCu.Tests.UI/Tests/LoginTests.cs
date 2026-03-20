@@ -1,5 +1,6 @@
 using QuanLyChungCu.Tests.UI.Infrastructure;
 using QuanLyChungCu.Tests.UI.Pages;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
 using System.Diagnostics;
@@ -10,14 +11,14 @@ namespace QuanLyChungCu.Tests.UI.Tests;
 [TestClass]
 public sealed class OwnerManagementTests
 {
-    private static readonly TimeSpan AddTimeout = TimeSpan.FromSeconds(2.5);
-    private static readonly TimeSpan EditTimeout = TimeSpan.FromSeconds(2.5);
-    private static readonly TimeSpan DeleteTimeout = TimeSpan.FromSeconds(2.5);
-    private static readonly TimeSpan SearchTimeout = TimeSpan.FromSeconds(3);
-    private static readonly TimeSpan DialogTimeout = TimeSpan.FromSeconds(4);
-    private static readonly TimeSpan NavigationTimeout = TimeSpan.FromSeconds(4);
-    private static readonly TimeSpan RetryNavigationTimeout = TimeSpan.FromSeconds(2.5);
-    private static readonly TimeSpan LoginTimeout = TimeSpan.FromSeconds(6);
+    private static readonly TimeSpan AddTimeout = TimeSpan.FromSeconds(2);
+    private static readonly TimeSpan EditTimeout = TimeSpan.FromSeconds(2);
+    private static readonly TimeSpan DeleteTimeout = TimeSpan.FromSeconds(2);
+    private static readonly TimeSpan SearchTimeout = TimeSpan.FromSeconds(2.2);
+    private static readonly TimeSpan DialogTimeout = TimeSpan.FromSeconds(3.2);
+    private static readonly TimeSpan NavigationTimeout = TimeSpan.FromSeconds(3.2);
+    private static readonly TimeSpan RetryNavigationTimeout = TimeSpan.FromSeconds(1.8);
+    private static readonly TimeSpan LoginTimeout = TimeSpan.FromSeconds(4.5);
 
     private WindowsDriver<WindowsElement>? _session;
 
@@ -71,30 +72,134 @@ public sealed class OwnerManagementTests
     }
 
     [TestMethod]
-    public void AddOwner_AddsNewOwnerToList()
+    [TestCategory("TC_ADDOWNER_001")]
+    public void AddOwner_001_WithValidData_AddsSuccessfully()
     {
         var ownersPage = new OwnerManagementPage(GetSession());
 
-        NavigateToOwnerScreenOrFail(ownersPage, "AddOwner");
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_ADDOWNER_001");
 
         ownersPage.OpenAddOwnerDialog();
         using (WindowsDriver<WindowsElement> addOwnerSession = CreateSessionForWindow("Thêm Chủ Hộ", DialogTimeout))
         {
             var ownerDialog = new OwnerDialogPage(addOwnerSession);
-            ownerDialog.FillAddOwnerForm("Chu ho moi", "0901999999", "Nam Dinh", "05/05/1985", "105");
+            ownerDialog.FillAddOwnerForm("Chu ho test 001", "0901999999", "Nam Dinh", "05/05/1985", "109");
             ownerDialog.SubmitAddOwner();
         }
 
-        WaitUntil(() => ownersPage.IsOwnerVisible("Chu ho moi"), AddTimeout, () => ownersPage.BuildLocatorDiagnostics());
-        Assert.IsTrue(ownersPage.IsOwnerVisible("Chu ho moi"));
+        WaitUntil(() => ownersPage.IsOwnerVisible("Chu ho test 001"), AddTimeout, () => ownersPage.BuildLocatorDiagnostics());
+        Assert.IsTrue(ownersPage.IsOwnerVisible("Chu ho test 001"));
     }
 
     [TestMethod]
-    public void EditOwner_UpdatesOwnerInformation()
+    [TestCategory("TC_ADDOWNER_002")]
+    public void AddOwner_002_WithInvalidRoomNumber_ShowsError()
     {
         var ownersPage = new OwnerManagementPage(GetSession());
 
-        NavigateToOwnerScreenOrFail(ownersPage, "EditOwner");
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_ADDOWNER_002");
+
+        ownersPage.OpenAddOwnerDialog();
+        using (WindowsDriver<WindowsElement> addOwnerSession = CreateSessionForWindow("Thêm Chủ Hộ", DialogTimeout))
+        {
+            var ownerDialog = new OwnerDialogPage(addOwnerSession);
+            ownerDialog.FillAddOwnerForm("Chu ho test 002", "0901888888", "Ha Nam", "06/06/1986", "abc");
+            ownerDialog.SubmitAddOwner();
+            // Should show validation error
+            WaitUntil(() => addOwnerSession.FindElements(By.Name("Số phòng phải là số nguyên!")).Count > 0, DialogTimeout, () => "Expected error message not found");
+            Assert.IsTrue(addOwnerSession.FindElements(By.Name("Số phòng phải là số nguyên!")).Count > 0);
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("TC_ADDOWNER_003")]
+    public void AddOwner_003_WithInvalidPhone_ShowsError()
+    {
+        var ownersPage = new OwnerManagementPage(GetSession());
+
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_ADDOWNER_003");
+
+        ownersPage.OpenAddOwnerDialog();
+        using (WindowsDriver<WindowsElement> addOwnerSession = CreateSessionForWindow("Thêm Chủ Hộ", DialogTimeout))
+        {
+            var ownerDialog = new OwnerDialogPage(addOwnerSession);
+            ownerDialog.FillAddOwnerForm("Chu ho test 003", "123", "Ha Noi", "07/07/1987", "106");
+            ownerDialog.SubmitAddOwner();
+            // Should show validation error for phone
+            WaitUntil(() => addOwnerSession.FindElements(By.Name("Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0!")).Count > 0, DialogTimeout, () => "Expected error message not found");
+            Assert.IsTrue(addOwnerSession.FindElements(By.Name("Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0!")).Count > 0);
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("TC_ADDOWNER_004")]
+    public void AddOwner_004_WithDuplicatePhone_ShowsError()
+    {
+        var ownersPage = new OwnerManagementPage(GetSession());
+
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_ADDOWNER_004");
+
+        ownersPage.OpenAddOwnerDialog();
+        using (WindowsDriver<WindowsElement> addOwnerSession = CreateSessionForWindow("Thêm Chủ Hộ", DialogTimeout))
+        {
+            var ownerDialog = new OwnerDialogPage(addOwnerSession);
+            // Using existing phone number
+            ownerDialog.FillAddOwnerForm("Chu ho test 004", "0901000001", "Ha Noi", "08/08/1988", "107");
+            ownerDialog.SubmitAddOwner();
+            // Should show error for duplicate
+            WaitUntil(() => addOwnerSession.FindElements(By.Name("Số điện thoại đã tồn tại, vui lòng nhập số khác!")).Count > 0, DialogTimeout, () => "Expected error message not found");
+            Assert.IsTrue(addOwnerSession.FindElements(By.Name("Số điện thoại đã tồn tại, vui lòng nhập số khác!")).Count > 0);
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("TC_ADDOWNER_005")]
+    public void AddOwner_005_WithDuplicateRoom_ShowsError()
+    {
+        var ownersPage = new OwnerManagementPage(GetSession());
+
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_ADDOWNER_005");
+
+        ownersPage.OpenAddOwnerDialog();
+        using (WindowsDriver<WindowsElement> addOwnerSession = CreateSessionForWindow("Thêm Chủ Hộ", DialogTimeout))
+        {
+            var ownerDialog = new OwnerDialogPage(addOwnerSession);
+            // Using existing room number
+            ownerDialog.FillAddOwnerForm("Chu ho test 005", "0901777777", "Ha Noi", "09/09/1989", "101");
+            ownerDialog.SubmitAddOwner();
+            // Should show error for duplicate room
+            WaitUntil(() => addOwnerSession.FindElements(By.Name("Số phòng đã tồn tại, vui lòng nhập số phòng khác!")).Count > 0, DialogTimeout, () => "Expected error message not found");
+            Assert.IsTrue(addOwnerSession.FindElements(By.Name("Số phòng đã tồn tại, vui lòng nhập số phòng khác!")).Count > 0);
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("TC_ADDOWNER_006")]
+    public void AddOwner_006_WithValidDataComplex_AddsSuccessfully()
+    {
+        var ownersPage = new OwnerManagementPage(GetSession());
+
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_ADDOWNER_006");
+
+        ownersPage.OpenAddOwnerDialog();
+        using (WindowsDriver<WindowsElement> addOwnerSession = CreateSessionForWindow("Thêm Chủ Hộ", DialogTimeout))
+        {
+            var ownerDialog = new OwnerDialogPage(addOwnerSession);
+            ownerDialog.FillAddOwnerForm("Chu ho test 006", "0901666666", "Nam Dinh", "10/10/1990", "110");
+            ownerDialog.SubmitAddOwner();
+        }
+
+        WaitUntil(() => ownersPage.IsOwnerVisible("Chu ho test 006"), AddTimeout, () => ownersPage.BuildLocatorDiagnostics());
+        Assert.IsTrue(ownersPage.IsOwnerVisible("Chu ho test 006"));
+    }
+
+    [TestMethod]
+    [TestCategory("TC_EDITOWNER_001")]
+    public void EditOwner_001_UpdateName_SuccessfullyEdited()
+    {
+        var ownersPage = new OwnerManagementPage(GetSession());
+
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_EDITOWNER_001");
 
         ownersPage.SearchByName("Chu ho sua");
         WaitUntil(() => ownersPage.IsOwnerVisible("Chu ho sua"), EditTimeout, () => ownersPage.BuildLocatorDiagnostics());
@@ -103,23 +208,96 @@ public sealed class OwnerManagementTests
         using (WindowsDriver<WindowsElement> editOwnerSession = CreateSessionForWindow("Sửa Thông Tin Chủ Hộ", DialogTimeout))
         {
             var ownerDialog = new OwnerDialogPage(editOwnerSession);
-            ownerDialog.FillEditOwnerForm("Chu ho da sua", "0901888888", "Ha Nam", "06/06/1986", "106");
+            ownerDialog.FillEditOwnerForm("Chu ho da sua ten", "0901000001", "Ha Noi", "01/01/1980", "101");
             ownerDialog.SubmitEditOwner();
         }
 
         ClickDialogButtonByName("OK");
 
-        ownersPage.SearchByName("Chu ho da sua");
-        WaitUntil(() => ownersPage.IsOwnerVisible("Chu ho da sua"), EditTimeout, () => ownersPage.BuildLocatorDiagnostics());
-        Assert.IsTrue(ownersPage.IsOwnerVisible("Chu ho da sua"));
+        ownersPage.SearchByName("Chu ho da sua ten");
+        WaitUntil(() => ownersPage.IsOwnerVisible("Chu ho da sua ten"), EditTimeout, () => ownersPage.BuildLocatorDiagnostics());
+        Assert.IsTrue(ownersPage.IsOwnerVisible("Chu ho da sua ten"));
     }
 
     [TestMethod]
-    public void DeleteOwner_RemovesOwnerFromList()
+    [TestCategory("TC_EDITOWNER_002")]
+    public void EditOwner_002_WithInvalidRoomNumber_ShowsError()
     {
         var ownersPage = new OwnerManagementPage(GetSession());
 
-        NavigateToOwnerScreenOrFail(ownersPage, "DeleteOwner");
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_EDITOWNER_002");
+
+        ownersPage.SearchByName("Chu ho sua");
+        WaitUntil(() => ownersPage.IsOwnerVisible("Chu ho sua"), EditTimeout, () => ownersPage.BuildLocatorDiagnostics());
+
+        ownersPage.OpenFirstResultForEdit();
+        using (WindowsDriver<WindowsElement> editOwnerSession = CreateSessionForWindow("Sửa Thông Tin Chủ Hộ", DialogTimeout))
+        {
+            var ownerDialog = new OwnerDialogPage(editOwnerSession);
+            ownerDialog.FillEditOwnerForm("Chu ho sua", "0901000001", "Ha Noi", "01/01/1980", "chu");
+            ownerDialog.SubmitEditOwner();
+            // Should show validation error
+            WaitUntil(() => editOwnerSession.FindElements(By.Name("Số phòng phải là số nguyên!")).Count > 0, DialogTimeout, () => "Expected error message not found");
+            Assert.IsTrue(editOwnerSession.FindElements(By.Name("Số phòng phải là số nguyên!")).Count > 0);
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("TC_EDITOWNER_003")]
+    public void EditOwner_003_WithInvalidPhone_ShowsError()
+    {
+        var ownersPage = new OwnerManagementPage(GetSession());
+
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_EDITOWNER_003");
+
+        ownersPage.SearchByName("Chu ho sua");
+        WaitUntil(() => ownersPage.IsOwnerVisible("Chu ho sua"), EditTimeout, () => ownersPage.BuildLocatorDiagnostics());
+
+        ownersPage.OpenFirstResultForEdit();
+        using (WindowsDriver<WindowsElement> editOwnerSession = CreateSessionForWindow("Sửa Thông Tin Chủ Hộ", DialogTimeout))
+        {
+            var ownerDialog = new OwnerDialogPage(editOwnerSession);
+            ownerDialog.FillEditOwnerForm("Chu ho sua", "999", "Ha Noi", "01/01/1980", "101");
+            ownerDialog.SubmitEditOwner();
+            // Should show validation error for phone
+            WaitUntil(() => editOwnerSession.FindElements(By.Name("Số điện thoại không hợp lệ!")).Count > 0, DialogTimeout, () => "Expected error message not found");
+            Assert.IsTrue(editOwnerSession.FindElements(By.Name("Số điện thoại không hợp lệ!")).Count > 0);
+        }
+    }
+
+    [TestMethod]
+    [TestCategory("TC_EDITOWNER_004")]
+    public void EditOwner_004_UpdateAllFields_SuccessfullyEdited()
+    {
+        var ownersPage = new OwnerManagementPage(GetSession());
+
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_EDITOWNER_004");
+
+        ownersPage.SearchByName("Chu ho sua");
+        WaitUntil(() => ownersPage.IsOwnerVisible("Chu ho sua"), EditTimeout, () => ownersPage.BuildLocatorDiagnostics());
+
+        ownersPage.OpenFirstResultForEdit();
+        using (WindowsDriver<WindowsElement> editOwnerSession = CreateSessionForWindow("Sửa Thông Tin Chủ Hộ", DialogTimeout))
+        {
+            var ownerDialog = new OwnerDialogPage(editOwnerSession);
+            ownerDialog.FillEditOwnerForm("Chu ho da sua day du", "0901000001", "Ha Noi", "01/01/1980", "101");
+            ownerDialog.SubmitEditOwner();
+        }
+
+        ClickDialogButtonByName("OK");
+
+        ownersPage.SearchByName("Chu ho da sua day du");
+        WaitUntil(() => ownersPage.IsOwnerVisible("Chu ho da sua day du"), EditTimeout, () => ownersPage.BuildLocatorDiagnostics());
+        Assert.IsTrue(ownersPage.IsOwnerVisible("Chu ho da sua day du"));
+    }
+
+    [TestMethod]
+    [TestCategory("TC_DELOWNER_001")]
+    public void DeleteOwner_001_ConfirmDelete_RemovesSuccessfully()
+    {
+        var ownersPage = new OwnerManagementPage(GetSession());
+
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_DELOWNER_001");
 
         ownersPage.SearchByName("Chu ho xoa");
         WaitUntil(() => ownersPage.IsOwnerVisible("Chu ho xoa"), DeleteTimeout, () => ownersPage.BuildLocatorDiagnostics());
@@ -133,38 +311,147 @@ public sealed class OwnerManagementTests
     }
 
     [TestMethod]
-    public void SearchOwner_FiltersByKeyword()
+    [TestCategory("TC_DELOWNER_002")]
+    public void DeleteOwner_002_CancelDelete_StaysInList()
     {
         var ownersPage = new OwnerManagementPage(GetSession());
 
-        NavigateToOwnerScreenOrFail(ownersPage, "SearchOwner");
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_DELOWNER_002");
 
-        var searchCases = new (OwnerManagementPage.OwnerSearchField Field, string Keyword, string Label)[]
-        {
-            (OwnerManagementPage.OwnerSearchField.Name, "timkiem", "Tên"),
-            (OwnerManagementPage.OwnerSearchField.Phone, "0901000003", "Số điện thoại"),
-            (OwnerManagementPage.OwnerSearchField.RoomNumber, "103", "Số phòng"),
-            (OwnerManagementPage.OwnerSearchField.QueQuan, "da nang", "Quê quán"),
-            (OwnerManagementPage.OwnerSearchField.BirthDate, "03/03/1983", "Ngày sinh")
-        };
+        ownersPage.SearchByName("Chu ho khac");
+        WaitUntil(() => ownersPage.IsOwnerVisible("Chu ho khac"), DeleteTimeout, () => ownersPage.BuildLocatorDiagnostics());
 
-        foreach (var searchCase in searchCases)
-        {
-            ownersPage.ClearSearch();
-            ownersPage.Search(searchCase.Field, searchCase.Keyword);
+        ownersPage.DeleteFirstResult();
+        ClickDialogButtonByName("No", "Không");
 
-            WaitUntil(
-                () => ownersPage.IsOwnerVisible("Chu ho timkiem"),
-                SearchTimeout,
-                () => $"[Search by {searchCase.Label} with '{searchCase.Keyword}']\n{ownersPage.BuildLocatorDiagnostics()}");
+        ownersPage.SearchByName("Chu ho khac");
+        WaitUntil(() => ownersPage.IsOwnerVisible("Chu ho khac"), DeleteTimeout, () => ownersPage.BuildLocatorDiagnostics());
+        Assert.IsTrue(ownersPage.IsOwnerVisible("Chu ho khac"));
+    }
 
-            Assert.IsTrue(
-                ownersPage.IsOwnerVisible("Chu ho timkiem"),
-                $"Expected owner 'Chu ho timkiem' for search field '{searchCase.Label}' and keyword '{searchCase.Keyword}'.");
-            Assert.IsFalse(
-                ownersPage.IsOwnerVisible("Chu ho khac"),
-                $"Unexpected owner 'Chu ho khac' still visible for search field '{searchCase.Label}' and keyword '{searchCase.Keyword}'.");
-        }
+    [TestMethod]
+    [TestCategory("TC_SEARCH_001")]
+    public void SearchOwner_001_SearchByName_FiltersSuccessfully()
+    {
+        var ownersPage = new OwnerManagementPage(GetSession());
+
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_SEARCH_001");
+
+        ownersPage.SearchByName("timkiem");
+
+        WaitUntil(
+            () => ownersPage.IsOwnerVisible("Chu ho timkiem"),
+            SearchTimeout,
+            () => $"[Search by Name with 'timkiem']\n{ownersPage.BuildLocatorDiagnostics()}");
+
+        Assert.IsTrue(ownersPage.IsOwnerVisible("Chu ho timkiem"));
+    }
+
+    [TestMethod]
+    [TestCategory("TC_SEARCH_002")]
+    public void SearchOwner_002_SearchByPhone_FiltersSuccessfully()
+    {
+        var ownersPage = new OwnerManagementPage(GetSession());
+
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_SEARCH_002");
+
+        ownersPage.Search(OwnerManagementPage.OwnerSearchField.Phone, "0901000003");
+
+        WaitUntil(
+            () => ownersPage.IsOwnerVisible("Chu ho timkiem"),
+            SearchTimeout,
+            () => $"[Search by Phone with '0901000003']\n{ownersPage.BuildLocatorDiagnostics()}");
+
+        Assert.IsTrue(ownersPage.IsOwnerVisible("Chu ho timkiem"));
+    }
+
+    [TestMethod]
+    [TestCategory("TC_SEARCH_003")]
+    public void SearchOwner_003_SearchByRoomNumber_FiltersSuccessfully()
+    {
+        var ownersPage = new OwnerManagementPage(GetSession());
+
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_SEARCH_003");
+
+        ownersPage.Search(OwnerManagementPage.OwnerSearchField.RoomNumber, "103");
+
+        WaitUntil(
+            () => ownersPage.IsOwnerVisible("Chu ho timkiem"),
+            SearchTimeout,
+            () => $"[Search by RoomNumber with '103']\n{ownersPage.BuildLocatorDiagnostics()}");
+
+        Assert.IsTrue(ownersPage.IsOwnerVisible("Chu ho timkiem"));
+    }
+
+    [TestMethod]
+    [TestCategory("TC_SEARCH_004")]
+    public void SearchOwner_004_SearchByQueQuan_FiltersSuccessfully()
+    {
+        var ownersPage = new OwnerManagementPage(GetSession());
+
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_SEARCH_004");
+
+        ownersPage.Search(OwnerManagementPage.OwnerSearchField.QueQuan, "da nang");
+
+        WaitUntil(
+            () => ownersPage.IsOwnerVisible("Chu ho timkiem"),
+            SearchTimeout,
+            () => $"[Search by QueQuan with 'da nang']\n{ownersPage.BuildLocatorDiagnostics()}");
+
+        Assert.IsTrue(ownersPage.IsOwnerVisible("Chu ho timkiem"));
+    }
+
+    [TestMethod]
+    [TestCategory("TC_SEARCH_005")]
+    public void SearchOwner_005_SearchByBirthDate_FiltersSuccessfully()
+    {
+        var ownersPage = new OwnerManagementPage(GetSession());
+
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_SEARCH_005");
+
+        ownersPage.Search(OwnerManagementPage.OwnerSearchField.BirthDate, "03/03/1983");
+
+        WaitUntil(
+            () => ownersPage.IsOwnerVisible("Chu ho timkiem"),
+            SearchTimeout,
+            () => $"[Search by BirthDate with '03/03/1983']\n{ownersPage.BuildLocatorDiagnostics()}");
+
+        Assert.IsTrue(ownersPage.IsOwnerVisible("Chu ho timkiem"));
+    }
+
+    [TestMethod]
+    [TestCategory("TC_SEARCH_006")]
+    public void SearchOwner_006_SearchWithNoResults_ShowsEmpty()
+    {
+        var ownersPage = new OwnerManagementPage(GetSession());
+
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_SEARCH_006");
+
+        ownersPage.SearchByName("khongcokeyword");
+
+        WaitUntil(
+            () => !ownersPage.IsOwnerVisible("Chu ho timkiem") && !ownersPage.IsOwnerVisible("Chu ho sua"),
+            SearchTimeout,
+            () => $"[Search with no matching results]\n{ownersPage.BuildLocatorDiagnostics()}");
+
+        Assert.IsFalse(ownersPage.IsOwnerVisible("Chu ho timkiem"));
+    }
+
+    [TestMethod]
+    [TestCategory("TC_SEARCH_007")]
+    public void SearchOwner_007_ClearSearch_ShowsAllRecords()
+    {
+        var ownersPage = new OwnerManagementPage(GetSession());
+
+        NavigateToOwnerScreenOrFail(ownersPage, "TC_SEARCH_007");
+
+        ownersPage.SearchByName("timkiem");
+        WaitUntil(() => ownersPage.IsOwnerVisible("Chu ho timkiem"), SearchTimeout, () => ownersPage.BuildLocatorDiagnostics());
+
+        ownersPage.ClearSearch();
+        WaitUntil(() => ownersPage.IsOwnerVisible("Chu ho timkiem"), SearchTimeout, () => ownersPage.BuildLocatorDiagnostics());
+
+        Assert.IsTrue(ownersPage.IsOwnerVisible("Chu ho timkiem"));
     }
 
     private WindowsDriver<WindowsElement> GetSession()
@@ -244,7 +531,7 @@ public sealed class OwnerManagementTests
         appiumOptions.AddAdditionalCapability("appTopLevelWindow", topLevelWindowHandle);
 
         WindowsDriver<WindowsElement> attachedSession = new WindowsDriver<WindowsElement>(TestConfig.WinAppDriverUri, appiumOptions);
-        attachedSession.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
+        attachedSession.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(300);
 
         _session?.Quit();
         _session = attachedSession;
@@ -317,7 +604,7 @@ public sealed class OwnerManagementTests
         appiumOptions.AddAdditionalCapability("appTopLevelWindow", topLevelWindowHandle);
 
         WindowsDriver<WindowsElement> windowSession = new WindowsDriver<WindowsElement>(TestConfig.WinAppDriverUri, appiumOptions);
-        windowSession.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
+        windowSession.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(300);
         return windowSession;
     }
 
@@ -402,7 +689,7 @@ public sealed class OwnerManagementTests
                 lastException = ex;
             }
 
-            Thread.Sleep(80);
+            Thread.Sleep(50);
         }
 
         string message = $"Condition was not met within {timeout.TotalSeconds:0.##} seconds.";

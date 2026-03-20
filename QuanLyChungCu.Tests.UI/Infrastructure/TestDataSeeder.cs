@@ -27,6 +27,7 @@ internal static class TestDataSeeder
                 resetUsersTable.ExecuteNonQuery();
             }
             InsertUser(connection, "admin", "1", 1);
+            InsertUser(connection, "0901000001", "1", 0);
         });
     }
 
@@ -75,10 +76,19 @@ internal static class TestDataSeeder
                 ensureTables.ExecuteNonQuery();
             }
 
+            // Base data for Edit tests
             InsertOwner(connection, "Chu ho sua", "0901000001", 101, "Ha Noi", "01/01/1980");
             InsertOwner(connection, "Chu ho xoa", "0901000002", 102, "Hai Phong", "02/02/1982");
+            
+            // Data for Search tests
             InsertOwner(connection, "Chu ho timkiem", "0901000003", 103, "Da Nang", "03/03/1983");
             InsertOwner(connection, "Chu ho khac", "0901000004", 104, "Hue", "04/04/1984");
+            
+            // Additional data for Add tests validation (to test duplicate phone/room)
+            InsertOwner(connection, "Test Owner 1", "0901000005", 105, "Ha Noi", "05/05/1985");
+            InsertOwner(connection, "Test Owner 2", "0901000006", 106, "Ho Chi Minh", "06/06/1986");
+            InsertOwner(connection, "Test Owner 3", "0901000007", 107, "Da Nang", "07/07/1987");
+            InsertOwner(connection, "Test Owner 4", "0901000008", 108, "Can Tho", "08/08/1988");
         });
     }
 

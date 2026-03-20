@@ -19,13 +19,13 @@ internal static class DriverFactory
                 appiumOptions.AddAdditionalCapability("app", TestConfig.AppExecutablePath);
 
                 var session = new WindowsDriver<WindowsElement>(TestConfig.WinAppDriverUri, appiumOptions);
-                session.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
+                session.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(300);
                 return session;
             }
             catch (Exception ex) when (attempt < maxAttempts)
             {
                 lastException = ex;
-                Thread.Sleep(200 * attempt);
+                Thread.Sleep(120 * attempt);
             }
         }
 

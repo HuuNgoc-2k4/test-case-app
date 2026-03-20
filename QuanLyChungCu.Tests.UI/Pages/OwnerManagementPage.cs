@@ -41,7 +41,7 @@ internal sealed class OwnerManagementPage(WindowsDriver<WindowsElement> session)
                 return true;
             }
 
-            Thread.Sleep(100);
+            Thread.Sleep(60);
         }
 
         return IsOwnerScreenReady();

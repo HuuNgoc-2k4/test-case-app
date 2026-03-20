@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
 
@@ -21,6 +23,46 @@ internal sealed class LoginPage(WindowsDriver<WindowsElement> session)
         passwordInput.SendKeys(password);
     }
 
+    public void ToggleShowPassword()
+    {
+        _session.FindElement(MobileBy.AccessibilityId("Login.ShowPassword")).Click();
+    }
+
+    public string GetVisiblePasswordText()
+    {
+        WindowsElement passwordVisible = _session.FindElement(MobileBy.AccessibilityId("Login.PasswordVisible"));
+        return passwordVisible.Text ?? string.Empty;
+    }
+
+    public bool IsPasswordVisibleTextBoxShown()
+    {
+        WindowsElement? passwordVisible = _session.FindElements(MobileBy.AccessibilityId("Login.PasswordVisible")).FirstOrDefault();
+        if (passwordVisible is null)
+        {
+            return false;
+        }
+
+        string offscreen = passwordVisible.GetAttribute("IsOffscreen") ?? "true";
+        return string.Equals(offscreen, "false", StringComparison.OrdinalIgnoreCase);
+    }
+
+    public bool IsPasswordBoxShown()
+    {
+        WindowsElement? passwordBox = _session.FindElements(MobileBy.AccessibilityId("Login.Password")).FirstOrDefault();
+        if (passwordBox is null)
+        {
+            return false;
+        }
+
+        string offscreen = passwordBox.GetAttribute("IsOffscreen") ?? "false";
+        return string.Equals(offscreen, "false", StringComparison.OrdinalIgnoreCase);
+    }
+
+    public void ClickMinimize()
+    {
+        _session.FindElement(MobileBy.AccessibilityId("Login.Minimize")).Click();
+    }
+
     public void Submit()
     {
         _session.FindElement(MobileBy.AccessibilityId("Login.Submit")).Click();
@@ -39,6 +81,11 @@ internal sealed class LoginPage(WindowsDriver<WindowsElement> session)
     public bool IsAuthenticatedScreenVisible()
     {
         return _session.FindElements(MobileBy.Name("Đăng xuất")).Count > 0;
+    }
+
+    public bool IsUserScreenVisible()
+    {
+        return _session.FindElements(MobileBy.Name("Tiền nhà")).Count > 0;
     }
 
     public bool IsLoginScreenVisible()
